@@ -19,20 +19,36 @@ You can install `imagespuller` using pip:
 pip install imagespuller
 ```
 
+## Cli
+
+```
+Usage: python -m imagespuller [OPTIONS]
+
+Options:
+  -q, --query TEXT          Query for image on search engine
+  -s, --search-engine TEXT  Search Engine to find (default: google)
+  -d, --dist TEXT           Destination folder to save images (default:
+                            downloaded_images)
+  -v, --verbose             Enable verbose logging
+  --help                    Show this message and exit.
+```
+
+```
+imagespuller -q Cat
+```
+
+
 ## Usage
 
+
 ```python
-from imagespuller import ImageSearch, OutputBuilder
+from imagespuller import ImageSearch
 
-# Initialize ImageSearch and OutputBuilder
-image_search = ImageSearch()
-output_builder = OutputBuilder(output_dir="./downloaded_images")
+searcher = ImageSearch()
 
-# Search for images using Google
-image_urls_google = image_search.search_images("cats", provider="google")
+image_urls = searcher.search_images("cat", provider="google", max_pages=1)
 
-# Save images to the output directory
-output_builder.save_images(image_urls_google, query="cats")
+searcher.save_images(image_urls, query="cats", dist_folder="downloaded_images")
 ```
 
 ## Supported Providers

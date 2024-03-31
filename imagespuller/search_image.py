@@ -1,6 +1,8 @@
+import os
 import requests
 from bs4 import BeautifulSoup
 import time
+import pathlib
 
 class ImageSearch:
     def __init__(self):
@@ -39,3 +41,23 @@ class ImageSearch:
                         image_urls.append(src)
             time.sleep(2)  # Add a delay to avoid hitting rate limits
         return image_urls
+    
+    def save_images(self, image_urls: list, query=None, dist_folder="images"):
+        if query:
+            dist_folder = os.path.join(dist_folder, query)
+        os.makedirs(dist_folder, exist_ok=True)
+
+        for url in image_urls:
+            try:
+                response = requests.get(url)
+                if response.status_code == 200:
+                    # Extract file extension from URL
+                    file_extension = pathlib.Path(url).suffix
+                    filename = f"{os.urandom(35).hex()}{file_extension}"
+                    file_path = os.path.join(dist_folder, filename)
+                    with open(file_path, 'wb') as f:
+                        f.write(response.content)
+                else:
+                    print(f"Failed to download image. Status code: {response.status_code}")
+            except Exception as e:
+                print(f"An error occurred while saving image: {str(e)}")
